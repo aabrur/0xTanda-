@@ -11,6 +11,9 @@
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- React Router DOM (INI BARU DITAMBAHKAN) -->
+    <script crossorigin src="https://unpkg.com/react-router-dom@6/dist/umd/react-router-dom.production.min.js"></script>
 
     <!-- Babel Standalone -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -67,6 +70,8 @@
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
+        // Panggil fungsi Router dari library yang baru ditambah
+        const { BrowserRouter, Routes, Route, Link, useNavigate, useParams, useLocation } = ReactRouterDOM;
 
         // --- KONFIGURASI LINK ---
         const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSd.../viewform"; 
@@ -189,19 +194,21 @@
             </div>
         );
 
-        const Navbar = ({ setPage }) => {
+        // --- UPDATED NAVBAR DENGAN LINK ROUTER ---
+        const Navbar = () => {
             const [menuOpen, setMenuOpen] = useState(false);
+            // Link pengganti anchor tag, to="" pengganti href=""
             return (
                 <nav className="fixed top-8 left-0 w-full z-40 px-6 mix-blend-difference text-brand-white">
                     <div className="flex justify-between items-center max-w-7xl mx-auto">
-                        <div onClick={() => setPage('home')} className="cursor-pointer flex items-center gap-2">
+                        <Link to="/" className="cursor-pointer flex items-center gap-2">
                              <img src={ASSETS.logoMain} alt="0xTanda" className="h-16 md:h-20 object-contain hover:opacity-80 transition-opacity" />
-                        </div>
+                        </Link>
                         <div className="hidden md:flex gap-8 font-mono text-sm">
-                            <button onClick={() => setPage('home')} className="hover:text-brand-purple hover:underline decoration-brand-purple underline-offset-4 tracking-wider">BERANDA</button>
-                            <button onClick={() => setPage('shop')} className="hover:text-brand-purple hover:underline decoration-brand-purple underline-offset-4 tracking-wider">KOLEKSI</button>
-                            <button onClick={() => setPage('verify')} className="hover:text-brand-purple hover:underline decoration-brand-purple underline-offset-4 tracking-wider">VERIFIKASI</button>
-                            <button onClick={() => setPage('about')} className="hover:text-brand-purple hover:underline decoration-brand-purple underline-offset-4 tracking-wider">TENTANG KAMI</button>
+                            <Link to="/" className="hover:text-brand-purple hover:underline decoration-brand-purple underline-offset-4 tracking-wider">BERANDA</Link>
+                            <Link to="/collection" className="hover:text-brand-purple hover:underline decoration-brand-purple underline-offset-4 tracking-wider">KOLEKSI</Link>
+                            <Link to="/verify" className="hover:text-brand-purple hover:underline decoration-brand-purple underline-offset-4 tracking-wider">VERIFIKASI</Link>
+                            <Link to="/about" className="hover:text-brand-purple hover:underline decoration-brand-purple underline-offset-4 tracking-wider">TENTANG KAMI</Link>
                         </div>
                         <div className="flex items-center gap-6">
                             <div className="md:hidden cursor-pointer" onClick={() => setMenuOpen(!menuOpen)}>
@@ -211,10 +218,10 @@
                     </div>
                     {menuOpen && (
                         <div className="absolute top-12 left-0 w-full bg-brand-black border-b border-[#333] p-6 md:hidden flex flex-col gap-4 font-mono text-sm shadow-xl z-50 text-brand-white">
-                            <button onClick={() => { setPage('home'); setMenuOpen(false); }} className="text-left py-2 border-b border-[#333]">BERANDA</button>
-                            <button onClick={() => { setPage('shop'); setMenuOpen(false); }} className="text-left py-2 border-b border-[#333]">KOLEKSI</button>
-                            <button onClick={() => { setPage('verify'); setMenuOpen(false); }} className="text-left py-2 border-b border-[#333]">VERIFIKASI</button>
-                            <button onClick={() => { setPage('about'); setMenuOpen(false); }} className="text-left py-2 border-b border-[#333]">TENTANG KAMI</button>
+                            <Link to="/" onClick={() => setMenuOpen(false)} className="text-left py-2 border-b border-[#333]">BERANDA</Link>
+                            <Link to="/collection" onClick={() => setMenuOpen(false)} className="text-left py-2 border-b border-[#333]">KOLEKSI</Link>
+                            <Link to="/verify" onClick={() => setMenuOpen(false)} className="text-left py-2 border-b border-[#333]">VERIFIKASI</Link>
+                            <Link to="/about" onClick={() => setMenuOpen(false)} className="text-left py-2 border-b border-[#333]">TENTANG KAMI</Link>
                         </div>
                     )}
                 </nav>
@@ -257,7 +264,7 @@
             );
         };
 
-        const LandingPage = ({ setPage }) => (
+        const LandingPage = () => (
             <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-brand-black">
                 <div className="absolute inset-0 opacity-20 pointer-events-none">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-purple blur-[150px] rounded-full animate-pulse"></div>
@@ -268,61 +275,70 @@
                     <div className="font-sans text-brand-purple text-xs tracking-[0.5em] uppercase font-bold">ONE ENTITY // DUAL EXISTENCE</div>
                     <div className="mb-4 hover:scale-105 transition-transform duration-500"><img src={ASSETS.logoMain} alt="0xTanda Main Logo" className="h-40 md:h-64 object-contain filter drop-shadow-[0_0_15px_rgba(131,110,249,0.3)]" /></div>
                     <p className="font-mono text-brand-gray max-w-md text-xs md:text-sm mb-10 leading-relaxed tracking-wide">GENESIS BATCH: 14 UNIT.<br/>KUALITAS FISIK HEAVYWEIGHT.<br/>SERTIFIKASI SENI DIGITAL.</p>
-                    <button onClick={() => setPage('shop')} className="group px-8 py-4 bg-transparent border border-brand-white text-brand-white font-mono text-sm hover:bg-brand-purple hover:border-brand-purple hover:text-black transition-all duration-300 flex items-center gap-2">LIHAT KOLEKSI <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform"/></button>
+                    <Link to="/collection" className="group px-8 py-4 bg-transparent border border-brand-white text-brand-white font-mono text-sm hover:bg-brand-purple hover:border-brand-purple hover:text-black transition-all duration-300 flex items-center gap-2">LIHAT KOLEKSI <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform"/></Link>
                 </div>
             </div>
         );
 
-        const ShopPage = ({ setPage, setSelectedProduct }) => (
-            <div className="min-h-screen bg-brand-black pt-28 pb-12 px-6">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex justify-between items-end mb-12 border-b border-[#333] pb-4">
-                        <div className="flex items-center gap-4"><VerticalLine className="h-10 md:h-12 w-2" /><h2 className="text-3xl md:text-5xl font-bold text-brand-white tracking-tight font-sans">GENESIS <span className="text-brand-purple text-sm font-mono ml-2 align-top">BATCH 001</span></h2></div>
-                        <div className="font-mono text-xs text-brand-gray hidden md:block">STATUS: <span className="text-brand-green">TERSEDIA</span></div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {PRODUCTS.map((product) => (
-                            <div key={product.id} className="group relative bg-[#121212] border border-[#333] hover:border-brand-purple transition-all duration-300 cursor-pointer" onClick={() => { setSelectedProduct(product); setPage('product'); }}>
-                                <div className="relative aspect-[3/4] overflow-hidden bg-[#1a1a1a]">
-                                    <img src={product.imgPhysical} alt={product.name} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0" />
-                                    <img src={product.imgNFT} alt="NFT" className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 scale-110 group-hover:scale-100 transition-all duration-500" />
-                                    <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-md border border-brand-purple text-brand-purple text-[10px] font-mono px-2 py-1 flex items-center gap-1"><Zap size={8} fill="currentColor"/> DIGITAL CARD</div>
-                                </div>
-                                <div className="p-4">
-                                    <div className="flex justify-between items-start mb-2"><h3 className="font-bold text-brand-white text-lg font-sans tracking-tighter">{product.name}</h3><div className="text-right"><div className="text-brand-white font-bold font-mono text-sm">Rp {product.priceIDR.toLocaleString()}</div></div></div>
-                                    <div className="w-full h-[1px] bg-[#333] my-3 group-hover:bg-brand-purple transition-colors"></div>
-                                    <div className="flex justify-between items-center text-xs font-mono text-brand-gray mb-4"><span>{product.type}</span><span className="flex items-center gap-1 group-hover:text-brand-white">DETAIL <ArrowRight size={12}/></span></div>
-                                    
-                                    {/* PURCHASE LINKS ON CARD */}
-                                    <div className="grid grid-cols-4 gap-2 border-t border-[#333] pt-3">
-                                        <button onClick={(e) => { e.stopPropagation(); window.open(product.links.tokopedia, '_blank'); }} className="flex items-center justify-center p-2 border border-[#333] hover:border-brand-tokopedia hover:bg-brand-tokopedia/10 text-brand-gray hover:text-brand-tokopedia transition-all rounded-sm" title="Beli di Tokopedia">
-                                            <Store size={16} />
-                                        </button>
-                                        <button onClick={(e) => { e.stopPropagation(); window.open(product.links.shopee, '_blank'); }} className="flex items-center justify-center p-2 border border-[#333] hover:border-brand-shopee hover:bg-brand-shopee/10 text-brand-gray hover:text-brand-shopee transition-all rounded-sm" title="Beli di Shopee">
-                                            <ShoppingBag size={16} />
-                                        </button>
-                                        <button onClick={(e) => { e.stopPropagation(); window.open(product.links.tiktok, '_blank'); }} className="flex items-center justify-center p-2 border border-[#333] hover:border-brand-white hover:bg-brand-white/10 text-brand-gray hover:text-brand-white transition-all rounded-sm" title="Beli di TikTok Shop">
-                                            <Music size={16} />
-                                        </button>
-                                        <button onClick={(e) => { e.stopPropagation(); window.open(product.links.whatsapp, '_blank'); }} className="flex items-center justify-center p-2 border border-[#333] hover:border-brand-whatsapp hover:bg-brand-whatsapp/10 text-brand-gray hover:text-brand-whatsapp transition-all rounded-sm" title="Chat WhatsApp">
-                                            <MessageCircle size={16} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        );
-
-        const ProductDetail = ({ product, setPage }) => {
-            const [activeImg, setActiveImg] = useState('physical');
-            if (!product) return null;
+        const ShopPage = () => {
+            const navigate = useNavigate();
             return (
                 <div className="min-h-screen bg-brand-black pt-28 pb-12 px-6">
                     <div className="max-w-7xl mx-auto">
-                        <button onClick={() => setPage('shop')} className="text-brand-gray font-mono text-xs mb-8 hover:text-white flex items-center gap-2">← KEMBALI KE KOLEKSI</button>
+                        <div className="flex justify-between items-end mb-12 border-b border-[#333] pb-4">
+                            <div className="flex items-center gap-4"><VerticalLine className="h-10 md:h-12 w-2" /><h2 className="text-3xl md:text-5xl font-bold text-brand-white tracking-tight font-sans">GENESIS <span className="text-brand-purple text-sm font-mono ml-2 align-top">BATCH 001</span></h2></div>
+                            <div className="font-mono text-xs text-brand-gray hidden md:block">STATUS: <span className="text-brand-green">TERSEDIA</span></div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {PRODUCTS.map((product) => (
+                                <div key={product.id} className="group relative bg-[#121212] border border-[#333] hover:border-brand-purple transition-all duration-300 cursor-pointer" onClick={() => navigate(`/collection/${product.id}`)}>
+                                    <div className="relative aspect-[3/4] overflow-hidden bg-[#1a1a1a]">
+                                        <img src={product.imgPhysical} alt={product.name} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0" />
+                                        <img src={product.imgNFT} alt="NFT" className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 scale-110 group-hover:scale-100 transition-all duration-500" />
+                                        <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-md border border-brand-purple text-brand-purple text-[10px] font-mono px-2 py-1 flex items-center gap-1"><Zap size={8} fill="currentColor"/> DIGITAL CARD</div>
+                                    </div>
+                                    <div className="p-4">
+                                        <div className="flex justify-between items-start mb-2"><h3 className="font-bold text-brand-white text-lg font-sans tracking-tighter">{product.name}</h3><div className="text-right"><div className="text-brand-white font-bold font-mono text-sm">Rp {product.priceIDR.toLocaleString()}</div></div></div>
+                                        <div className="w-full h-[1px] bg-[#333] my-3 group-hover:bg-brand-purple transition-colors"></div>
+                                        <div className="flex justify-between items-center text-xs font-mono text-brand-gray mb-4"><span>{product.type}</span><span className="flex items-center gap-1 group-hover:text-brand-white">DETAIL <ArrowRight size={12}/></span></div>
+                                        
+                                        {/* PURCHASE LINKS ON CARD */}
+                                        <div className="grid grid-cols-4 gap-2 border-t border-[#333] pt-3">
+                                            <button onClick={(e) => { e.stopPropagation(); window.open(product.links.tokopedia, '_blank'); }} className="flex items-center justify-center p-2 border border-[#333] hover:border-brand-tokopedia hover:bg-brand-tokopedia/10 text-brand-gray hover:text-brand-tokopedia transition-all rounded-sm" title="Beli di Tokopedia">
+                                                <Store size={16} />
+                                            </button>
+                                            <button onClick={(e) => { e.stopPropagation(); window.open(product.links.shopee, '_blank'); }} className="flex items-center justify-center p-2 border border-[#333] hover:border-brand-shopee hover:bg-brand-shopee/10 text-brand-gray hover:text-brand-shopee transition-all rounded-sm" title="Beli di Shopee">
+                                                <ShoppingBag size={16} />
+                                            </button>
+                                            <button onClick={(e) => { e.stopPropagation(); window.open(product.links.tiktok, '_blank'); }} className="flex items-center justify-center p-2 border border-[#333] hover:border-brand-white hover:bg-brand-white/10 text-brand-gray hover:text-brand-white transition-all rounded-sm" title="Beli di TikTok Shop">
+                                                <Music size={16} />
+                                            </button>
+                                            <button onClick={(e) => { e.stopPropagation(); window.open(product.links.whatsapp, '_blank'); }} className="flex items-center justify-center p-2 border border-[#333] hover:border-brand-whatsapp hover:bg-brand-whatsapp/10 text-brand-gray hover:text-brand-whatsapp transition-all rounded-sm" title="Chat WhatsApp">
+                                                <MessageCircle size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const ProductDetail = () => {
+            const [activeImg, setActiveImg] = useState('physical');
+            const { id } = useParams(); // Ambil ID dari URL
+            
+            // Cari produk berdasarkan ID yang ada di URL
+            const product = PRODUCTS.find(p => p.id === parseInt(id));
+
+            if (!product) return <div className="min-h-screen bg-brand-black flex items-center justify-center text-white">PRODUK TIDAK DITEMUKAN</div>;
+            
+            return (
+                <div className="min-h-screen bg-brand-black pt-28 pb-12 px-6">
+                    <div className="max-w-7xl mx-auto">
+                        <Link to="/collection" className="text-brand-gray font-mono text-xs mb-8 hover:text-white flex items-center gap-2">← KEMBALI KE KOLEKSI</Link>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                             <div className="relative aspect-square border border-[#333] bg-[#121212]">
                                 <img src={activeImg === 'physical' ? product.imgPhysical : product.imgNFT} className="w-full h-full object-cover" alt="Detail" />
@@ -370,11 +386,22 @@
 
         const VerifyPage = () => {
             const openGoogleForm = () => window.open(GOOGLE_FORM_URL, '_blank');
+            const { code } = useParams(); // Ini buat nangkep kode di URL: /claim/ABCD
+            
             return (
                 <div className="min-h-screen bg-brand-black flex flex-col pt-24 items-center justify-center p-6 text-center text-brand-white">
                     <div className="animate-fade-in w-full max-w-md">
                         <div className="w-24 h-24 border-2 border-[#333] rounded-xl flex items-center justify-center mx-auto mb-8 bg-[#121212] shadow-[0_0_30px_rgba(131,110,249,0.1)]"><Ticket size={48} className="text-brand-purple" /></div>
+                        
                         <h2 className="text-2xl md:text-3xl font-bold mb-2 font-sans tracking-wide">REDEMPTION PORTAL</h2>
+                        
+                        {/* Jika ada kode claim di URL, tampilkan di sini */}
+                        {code && (
+                            <div className="mb-4 bg-brand-purple/10 border border-brand-purple text-brand-purple p-2 font-mono text-sm">
+                                CLAIM CODE TERDETEKSI: <b>{code}</b>
+                            </div>
+                        )}
+
                         <p className="text-brand-gray font-mono text-xs mb-8">Verifikasi keaslian produk fisik dan klaim aset digital Anda melalui formulir terenkripsi kami.</p>
                         <div className="bg-[#121212] border border-brand-purple/30 p-6 mb-8 text-left">
                             <h3 className="text-brand-white font-bold mb-2 flex items-center gap-2"><Shield size={16} className="text-brand-purple"/> PANDUAN VERIFIKASI:</h3>
@@ -440,23 +467,37 @@
             );
         };
 
+        // --- APLIKASI UTAMA (SUDAH DIUBAH MENJADI ROUTER) ---
         const App = () => {
-            const [page, setPage] = useState('home');
-            const [selectedProduct, setSelectedProduct] = useState(null);
-
+            // Hapus useState('home'), sekarang pakai Routes
             return (
-                <div className="bg-brand-black min-h-screen text-brand-white selection:bg-brand-purple selection:text-black font-mono cursor-none">
-                    <CustomCursor />
-                    <Marquee />
-                    <Navbar setPage={setPage} />
-                    <main className="relative z-10 fade-in-up">
-                        {page === 'home' && <LandingPage setPage={setPage} />}
-                        {page === 'shop' && <ShopPage setPage={setPage} setSelectedProduct={setSelectedProduct} />}
-                        {page === 'product' && <ProductDetail product={selectedProduct} setPage={setPage} />}
-                        {page === 'verify' && <VerifyPage />}
-                        {page === 'about' && <AboutPage />}
-                    </main>
-                </div>
+                <BrowserRouter>
+                    <div className="bg-brand-black min-h-screen text-brand-white selection:bg-brand-purple selection:text-black font-mono cursor-none">
+                        <CustomCursor />
+                        <Marquee />
+                        <Navbar /> {/* Navbar sudah tidak butuh setPage */}
+                        
+                        <main className="relative z-10 fade-in-up">
+                            <Routes>
+                                {/* HALAMAN UTAMA */}
+                                <Route path="/" element={<LandingPage />} />
+                                
+                                {/* HALAMAN KOLEKSI */}
+                                <Route path="/collection" element={<ShopPage />} />
+                                
+                                {/* HALAMAN DETAIL PRODUK (URL dinamis, misal: /collection/1) */}
+                                <Route path="/collection/:id" element={<ProductDetail />} />
+                                
+                                {/* HALAMAN VERIFIKASI (Bisa diakses lewat /verify atau /claim/1234) */}
+                                <Route path="/verify" element={<VerifyPage />} />
+                                <Route path="/claim/:code" element={<VerifyPage />} />
+                                
+                                {/* HALAMAN TENTANG KAMI */}
+                                <Route path="/about" element={<AboutPage />} />
+                            </Routes>
+                        </main>
+                    </div>
+                </BrowserRouter>
             );
         };
 
@@ -465,3 +506,4 @@
     </script>
 </body>
 </html>
+
